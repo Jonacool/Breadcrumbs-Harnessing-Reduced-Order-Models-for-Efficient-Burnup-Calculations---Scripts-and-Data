@@ -1,0 +1,221 @@
+set title "MIMOSA_initial_grid"
+
+%------define surfaces------
+
+surf 1 cyl 0 0 100 -100 100    %200x200 cm cylinder
+surf 2 cyl 0 0 160 -160 160    %60 cm reflector
+
+%------define cells------
+
+cell 1 0 fuel  -1
+cell 2 0 reflector 1 -2
+cell 3 0 outside 2
+
+%------material definitions------
+
+%block with 45% NaCl, 20% ThCl4 and 35% PuCl3
+%plutonium isotope distribution according to LWR fuel burnup composition
+
+mat fuel -3.082486 burn 1 tmp 1000 vol 6283185 % vol 1000 % volume is not 1000?		%density from formula in technical note
+94238.82c 0.003288    %Plutonium 238
+94239.82c 0.0553    %Plutonium 239
+94240.82c 0.026727    %Plutonium 240
+94241.82c 0.012515    %Plutonium 241
+94242.82c 0.00823    %Plutonium 242
+90232.82c 0.060606    %Thorium-232
+17035.82c 0.528024    %Chlorine-35
+17037.82c 0.168945    %Chlorine-37
+11023.82c 0.136364    %Sodium
+
+%iron reflector
+mat reflector -7.86 tmp 1000
+26054.82c 0.05845    %Fe-54
+26056.82c 0.91754    %Fe-56
+26057.82c 0.02119    %Fe-57
+26058.82c 0.00282    %Fe-58
+
+%------criticality calculation settings-------
+
+set pop 1000 100 20 %100000 neutrons, 200 active cycles, 10 inactive cycles
+
+%------decay and fission yield libraries------
+
+set declib "JEFF33-rdd_all.asc.txt"    %decay data
+set nfylib "JEFF33-nfy.asc.txt"        %neutron induced fission data
+set sfylib "JEFF33-sfy.asc.txt"        %spontaneous fission data
+
+%------burnup and other settings------
+
+set depmtx 1
+set ures 1
+set xenon 1
+set pcc LELI
+set xscalc 2
+set depout 3
+set inventory all
+
+%------power density and depletion steps------
+
+set powdens 100.0E-3 %kW/g
+
+dep daytot
+
+1           %small steps for xenon saturation
+2
+7
+15
+30             %larger steps for the rest
+60
+
+
+%------printing material depletion------
+set printm 1 0.0
+
+%------detector for flux------
+
+ene 1 4 nj20
+det 1 de 1 dt -3
+
+%------detectors for determining microscopic fission cross sections------
+
+% Detector materials
+
+mat Th227 1.0 tmp 1000 90227.82c 1.0
+mat Th228 1.0 tmp 1000 90228.82c 1.0
+mat Th229 1.0 tmp 1000 90229.82c 1.0
+mat Th230 1.0 tmp 1000 90230.82c 1.0
+mat Th231 1.0 tmp 1000 90231.82c 1.0
+mat Th232 1.0 tmp 1000 90232.82c 1.0
+mat Th233 1.0 tmp 1000 90233.82c 1.0
+mat Th234 1.0 tmp 1000 90234.82c 1.0
+mat Pa229 1.0 tmp 1000 91229.82c 1.0
+mat Pa230 1.0 tmp 1000 91230.82c 1.0
+mat Pa231 1.0 tmp 1000 91231.82c 1.0
+mat Pa232 1.0 tmp 1000 91232.82c 1.0
+mat Pa233 1.0 tmp 1000 91233.82c 1.0
+mat U230  1.0 tmp 1000 92230.82c 1.0
+mat U231  1.0 tmp 1000 92231.82c 1.0
+mat U232  1.0 tmp 1000 92232.82c 1.0
+mat U233  1.0 tmp 1000 92233.82c 1.0
+mat U234  1.0 tmp 1000 92234.82c 1.0
+mat U235  1.0 tmp 1000 92235.82c 1.0
+mat U236  1.0 tmp 1000 92236.82c 1.0
+mat U237  1.0 tmp 1000 92237.82c 1.0
+mat U238  1.0 tmp 1000 92238.82c 1.0
+mat U239  1.0 tmp 1000 92239.82c 1.0
+mat U240  1.0 tmp 1000 92240.82c 1.0
+mat U241  1.0 tmp 1000 92241.82c 1.0
+mat Np234 1.0 tmp 1000 93234.82c 1.0
+mat Np235 1.0 tmp 1000 93235.82c 1.0
+mat Np236 1.0 tmp 1000 93236.82c 1.0
+mat Np237 1.0 tmp 1000 93237.82c 1.0
+mat Np238 1.0 tmp 1000 93238.82c 1.0
+mat Np239 1.0 tmp 1000 93239.82c 1.0
+mat Pu236 1.0 tmp 1000 94236.82c 1.0
+mat Pu237 1.0 tmp 1000 94237.82c 1.0
+mat Pu238 1.0 tmp 1000 94238.82c 1.0
+mat Pu239 1.0 tmp 1000 94239.82c 1.0
+mat Pu240 1.0 tmp 1000 94240.82c 1.0
+mat Pu241 1.0 tmp 1000 94241.82c 1.0
+mat Pu242 1.0 tmp 1000 94242.82c 1.0
+mat Pu243 1.0 tmp 1000 94243.82c 1.0
+mat Pu244 1.0 tmp 1000 94244.82c 1.0
+mat Am240 1.0 tmp 1000 95240.82c 1.0
+mat Am241 1.0 tmp 1000 95241.82c 1.0
+mat Am242 1.0 tmp 1000 95242.82c 1.0
+mat Am642 1.0 tmp 1000 95642.82c 1.0
+mat Am243 1.0 tmp 1000 95243.82c 1.0
+mat Am244 1.0 tmp 1000 95244.82c 1.0
+mat Am644 1.0 tmp 1000 95644.82c 1.0
+mat Cm240 1.0 tmp 1000 96240.82c 1.0
+mat Cm241 1.0 tmp 1000 96241.82c 1.0
+mat Cm242 1.0 tmp 1000 96242.82c 1.0
+mat Cm243 1.0 tmp 1000 96243.82c 1.0
+mat Cm244 1.0 tmp 1000 96244.82c 1.0
+mat Cm245 1.0 tmp 1000 96245.82c 1.0
+mat Cm246 1.0 tmp 1000 96246.82c 1.0
+mat Cm247 1.0 tmp 1000 96247.82c 1.0
+mat Cm248 1.0 tmp 1000 96248.82c 1.0
+mat Cm249 1.0 tmp 1000 96249.82c 1.0
+mat Cm250 1.0 tmp 1000 96250.82c 1.0
+
+% Total flux in material "fuel"
+
+det 2 dm fuel
+
+% Calculate microscopic fission cross sections of all fissionable
+% nuclides by dividing the reaction rate by total flux:
+
+det  3 dm fuel dr 18 Th227 dt 3 2
+det  4 dm fuel dr 18 Th228 dt 3 2
+det  5 dm fuel dr 18 Th229 dt 3 2
+det  6 dm fuel dr 18 Th230 dt 3 2
+det  7 dm fuel dr 18 Th231 dt 3 2
+det  8 dm fuel dr 18 Th232 dt 3 2
+det  9 dm fuel dr 18 Th233 dt 3 2
+det 10 dm fuel dr 18 Th234 dt 3 2
+det 11 dm fuel dr 18 Pa229 dt 3 2
+det 12 dm fuel dr 18 Pa230 dt 3 2
+det 13 dm fuel dr 18 Pa231 dt 3 2
+det 14 dm fuel dr 18 Pa232 dt 3 2
+det 15 dm fuel dr 18 Pa233 dt 3 2
+det 16 dm fuel dr 18 U230  dt 3 2
+det 17 dm fuel dr 18 U231  dt 3 2
+det 18 dm fuel dr 18 U232  dt 3 2
+det 19 dm fuel dr 18 U233  dt 3 2
+% det 20 dm fuel dr 18 U234  dt 3 2
+det 21 dm fuel dr 18 U235  dt 3 2
+% det 22 dm fuel dr 18 U236  dt 3 2
+det 23 dm fuel dr 18 U237  dt 3 2
+det 24 dm fuel dr 18 U238  dt 3 2
+det 25 dm fuel dr 18 U239  dt 3 2
+% det 26 dm fuel dr 18 U240  dt 3 2
+det 27 dm fuel dr 18 U241  dt 3 2
+det 28 dm fuel dr 18 Np234 dt 3 2
+det 29 dm fuel dr 18 Np235 dt 3 2
+det 30 dm fuel dr 18 Np236 dt 3 2
+det 31 dm fuel dr 18 Np237 dt 3 2
+det 32 dm fuel dr 18 Np238 dt 3 2
+det 33 dm fuel dr 18 Np239 dt 3 2
+det 34 dm fuel dr 18 Pu236 dt 3 2
+det 35 dm fuel dr 18 Pu237 dt 3 2
+det 36 dm fuel dr 18 Pu238 dt 3 2
+det 37 dm fuel dr 18 Pu239 dt 3 2
+det 38 dm fuel dr 18 Pu240 dt 3 2
+det 39 dm fuel dr 18 Pu241 dt 3 2
+det 40 dm fuel dr 18 Pu242 dt 3 2
+det 41 dm fuel dr 18 Pu243 dt 3 2
+det 42 dm fuel dr 18 Pu244 dt 3 2
+det 43 dm fuel dr 18 Am240 dt 3 2
+det 44 dm fuel dr 18 Am241 dt 3 2
+det 45 dm fuel dr 18 Am242 dt 3 2
+det 46 dm fuel dr 18 Am642 dt 3 2
+det 47 dm fuel dr 18 Am243 dt 3 2
+det 48 dm fuel dr 18 Am244 dt 3 2
+det 49 dm fuel dr 18 Am644 dt 3 2
+det 50 dm fuel dr 18 Cm240 dt 3 2
+det 51 dm fuel dr 18 Cm241 dt 3 2
+det 52 dm fuel dr 18 Cm242 dt 3 2
+det 53 dm fuel dr 18 Cm243 dt 3 2
+det 54 dm fuel dr 18 Cm244 dt 3 2
+det 55 dm fuel dr 18 Cm245 dt 3 2
+det 56 dm fuel dr 18 Cm246 dt 3 2
+det 57 dm fuel dr 18 Cm247 dt 3 2
+det 58 dm fuel dr 18 Cm248 dt 3 2
+det 59 dm fuel dr 18 Cm249 dt 3 2
+det 60 dm fuel dr 18 Cm250 dt 3 2
+
+det 61 dm fuel dr 19 U234  dt 3 2
+det 62 dm fuel dr 20 U234  dt 3 2
+det 63 dm fuel dr 21 U234  dt 3 2
+det 64 dm fuel dr 38 U234  dt 3 2
+
+det 65 dm fuel dr 19 U236  dt 3 2
+det 66 dm fuel dr 20 U236  dt 3 2
+det 67 dm fuel dr 21 U236  dt 3 2
+det 68 dm fuel dr 38 U236  dt 3 2
+
+det 69 dm fuel dr 19 U240  dt 3 2
+det 70 dm fuel dr 20 U240  dt 3 2
+det 71 dm fuel dr 21 U240  dt 3 2
+det 72 dm fuel dr 38 U240  dt 3 2

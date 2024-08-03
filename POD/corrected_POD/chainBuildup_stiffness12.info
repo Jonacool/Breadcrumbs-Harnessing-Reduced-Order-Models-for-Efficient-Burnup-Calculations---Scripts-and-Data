@@ -1,0 +1,10 @@
+Parameter,Value
+experiment_name,chainBuildup_stiffness12
+start time,2024-07-17 15:57:50
+sim steps,10000
+method,Euler_backward
+N nuclides,200
+lambda min,1
+lambda max,1000000000000.0
+N snapshots,500
+seed,42

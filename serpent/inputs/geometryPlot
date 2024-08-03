@@ -1,0 +1,77 @@
+set title "MIMOSA_initial_grid"
+
+%------define surfaces------
+
+surf 1 cyl 0 0 100 -100 100    %200x200 cm cylinder
+surf 2 cyl 0 0 160 -160 160    %60 cm reflector
+
+%------define cells------
+
+cell 1 0 fuel  -1 
+cell 2 0 reflector 1 -2
+cell 3 0 outside 2
+
+%------material definitions------
+
+%block with 45% NaCl, 20% ThCl4 and 35% PuCl3
+%plutonium isotope distribution according to LWR fuel burnup composition
+mat fuel -3.082486 burn 1 tmp 1000 vol 6283185 rgb 255 228 181 
+94238.82c 0.003288    %Plutonium 238
+94239.82c 0.0553    %Plutonium 239
+94240.82c 0.026727    %Plutonium 240
+94241.82c 0.012515    %Plutonium 241
+94242.82c 0.00823    %Plutonium 242
+90232.82c 0.060606    %Thorium-232
+17035.82c 0.528024    %Chlorine-35
+17037.82c 0.168945    %Chlorine-37
+11023.82c 0.136364    %Sodium
+
+%iron reflector
+mat reflector -7.86 tmp 1000 rgb 128 128 128
+26054.82c 0.05845    %Fe-54
+26056.82c 0.91754    %Fe-56
+26057.82c 0.02119    %Fe-57
+26058.82c 0.00282    %Fe-58
+
+plot 1 2000 2000
+plot 2 2000 2000
+plot 3 2000 2000
+%------criticality calculation settings-------
+
+set pop 10000 200 20 %100000 neutrons, 200 active cycles, 10 inactive cycles
+
+%------decay and fission yield libraries------
+
+set declib "JEFF33-rdd_all.asc"    %decay data
+set nfylib "JEFF33-nfy.asc"        %neutron induced fission data
+set sfylib "JEFF33-sfy.asc"        %spontaneous fission data
+
+%------burnup and other settings------
+
+set depmtx 1
+set ures 1
+set xenon 1
+set pcc LELI
+set xscalc 2
+set depout 3
+set inventory burnupindicators
+
+%------power density and depletion steps------
+
+set powdens 100.0E-3 %kW/g
+
+dep daytot
+
+1           %small steps for xenon saturation
+2
+7
+15
+30             %larger steps for the rest
+60
+
+
+%------printing material depletion------
+set printm 1 0.0
+
+% Detector flux for plot
+det fission du 0 dm fuel dr -6 void dx -100 100 100
